@@ -16,9 +16,26 @@ function execute(event) {
   axios
     .get(`https://viacep.com.br/ws/${zipCode}/json/`)
     .then((response) => {
-      console.log(response.data);
+      content.innerHTML = ''
+
+      var { data } = response
+
+      if (data.erro ) throw new Error(`CEP Inválido`)
+
+      createLine(`${data.logradouro}`)
+      createLine(`Bairro: ${data.bairro}`)
+      createLine(`Cidade: ${data.localidade}-${data.uf}`)
     })
     .catch((error) => {
-      console.log(error);
+      content.innerHTML = ''
+      createLine(`Oooops! Algo deu errado!`)
     });
+}
+
+function createLine(text) {
+    var line = document.createElement('p')
+    var text = document.createTextNode(text)
+
+    line.appendChild(text)
+    content.appendChild(line)
 }
